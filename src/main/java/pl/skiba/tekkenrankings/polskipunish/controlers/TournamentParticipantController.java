@@ -24,7 +24,7 @@ public class TournamentParticipantController {
     @GetMapping("participant")
     public ChallongeParticipant getParticipant(@RequestParam Long id){
         TournamentParticipant tournamentParticipant =  tournamentParticipantService.findByPlace(id).orElseThrow();
-        return SimpleMapper.INSTANCE.toChallongeParticipant(tournamentParticipant);
+        return SimpleMapper.INSTANCE.ToChallongeParticipant(tournamentParticipant);
     }
 
 }

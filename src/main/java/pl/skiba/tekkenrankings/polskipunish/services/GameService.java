@@ -31,6 +31,11 @@ public class GameService {
         return SimpleMapper.INSTANCE.GameToDTO(game);
     }
 
+    public void deleteByGameId(Long id){
+        Game game= gameRepo.findById(id).orElseThrow(() -> new GameNotFoundException(id));
+        gameRepo.delete(game);
+    }
+
     public Iterable<GameDTO> getAll(){
         return SimpleMapper.INSTANCE.GameListToDTO(gameRepo.findAll());
     }

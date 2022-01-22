@@ -14,6 +14,7 @@ import javax.persistence.EntityNotFoundException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -63,8 +64,8 @@ public class ChallongeService {
         return participantList;
     }
 
-    public Tournament getTourmanetFromParticipantList(List<TournamentParticipant> participantList, TournamentCategoryEnum tournamentType , String tournamentName, String gamename) {
-        Tournament tournament = new Tournament(tournamentName,tournamentType, gameService.getGameByName(gamename), participantList);
+    public Tournament getTourmanetFromParticipantList(List<TournamentParticipant> participantList, TournamentCategoryEnum tournamentType , String tournamentName, String gamename, String country, Date eventDate) {
+        Tournament tournament = new Tournament(tournamentName,tournamentType, gameService.getGameByName(gamename), participantList , country, eventDate);
         participantList.forEach(element -> {
             element.setTournament(tournament);
             Player player = element.getPlayer();
