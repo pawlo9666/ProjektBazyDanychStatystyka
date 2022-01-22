@@ -1,0 +1,55 @@
+1.SELECT LAST_NAME || ' ' || SALARY AS Wynagrodzenie from EMPLOYEES WHERE (department_id = 40 or department_id = 50)  and salary between 2000 and 7000 order by last_name;
+
+2.SELECT hire_date , last_name , &parametr AS (SELECT First_name from )  from EMPLOYEES where EXTRACT(YEAR FROM hire_date) = 2005
+
+3.SELECT e.first_name || ' ' || e.last_name, e.salary, e.phone_number 
+FROM employees e 
+WHERE substr(e.last_name, 3, 1) = 'e' 
+AND upper(e.first_name) 
+LIKE upper('%&part_of_first_name%') 
+ORDER BY 1 DESC, 2 ASC;
+
+4.SELECT e.first_name, e.last_name, round(months_between(sysdate, e.hire_date)) AS working_months,
+CASE
+WHEN round(months_between(sysdate, e.hire_date)) <= 150              
+THEN '10%'
+WHEN round(months_between(sysdate, e.hire_date)) BETWEEN 150 AND 200 THEN '20%'
+ELSE '30%'
+END as wysokosc_dodatku
+FROM employees e order by 3 asc
+
+5.SELECT d.department_name, SUM(e.salary) sum_of_department_workers_salary, round(AVG(e.salary), 0) avg_of_department_workers_salary
+FROM departments d 
+JOIN employees e ON d.department_id = e.department_id
+JOIN jobs      j ON j.job_id = e.job_id
+WHERE j.min_salary > 5000
+GROUP BY d.department_id, d.department_name
+
+6.SELECT e.last_name, d.department_id, d.department_name, e.job_id
+FROM employees e
+JOIN departments d ON d.department_id = e.department_id
+JOIN locations   l ON l.location_id = d.location_id
+WHERE l.city = 'Toronto'
+
+7. ?
+
+8. ?
+
+9. create table job_grades as select * from hr.job_grades
+
+10 SELECT e.first_name || ' ' || e.last_name AS name, e.job_id, d.department_name, e.salary, jg.grade
+FROM employees e
+JOIN departments d ON d.department_id = e.department_id
+LEFT JOIN job_grades  jg ON e.salary BETWEEN jg.min_salary AND jg.max_salary
+
+11.SELECT e.first_name || ' ' || e.last_name, e.salary
+FROM employees e
+WHERE e.salary > (SELECT AVG(e.salary) FROM employees e)
+ORDER BY e.salary DESC
+
+12.SELECT distinct name
+FROM (SELECT e.first_name || ' ' || e.last_name name, e.employee_id
+FROM employees e JOIN employees e1 ON e1.department_id = e.department_id
+WHERE lower(e1.last_name) LIKE '%u%')
+
+	
