@@ -1,0 +1,29 @@
+create or replace PROCEDURE ADD_PLAYER(player_name in player.name%TYPE)
+IS
+BEGIN
+    CHECK_NICKNAME_LENGTH(player_name);
+
+    INSERT INTO player(player.name)
+    VALUES(player_name);
+END ADD_PLAYER;
+
+create or replace PROCEDURE CHECK_NICKNAME_LENGTH(nickname in player.name%TYPE) IS
+BEGIN
+  IF LENGTH(nickname) >= 30 then
+    raise_application_error(-20000, 'nickname is too long');
+  END IF;
+END CHECK_NICKNAME_LENGTH;
+
+create or replace PROCEDURE DELETE_PLAYER(player_id in player.id%TYPE)
+IS
+BEGIN
+    delete from tournament_participant where player_id=player_id;
+    delete from player where id = player_id;
+END DELETE_PLAYER;
+
+create or replace PROCEDURE UPDATE_PLAYER(player_id in player.id%TYPE, player_name in player.name%TYPE)
+IS
+BEGIN
+    CHECK_NICKNAME_LENGTH(player_name);
+    UPDATE player set name=player_name where id=player_id;
+END UPDATE_PLAYER;
