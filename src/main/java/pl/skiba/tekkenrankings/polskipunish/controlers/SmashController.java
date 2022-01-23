@@ -1,6 +1,7 @@
 package pl.skiba.tekkenrankings.polskipunish.controlers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +37,7 @@ public class SmashController {
                                      @RequestParam TournamentCategoryEnum tournamentType,
                                      @RequestParam String gamename,
                                      @RequestParam String country,
-                                     @RequestParam Date eventDate) throws IOException {
+                                     @RequestParam @DateTimeFormat(pattern="MM/dd/yyyy") Date eventDate) throws IOException {
 
         //icfc-eu-season-1-week-5
         String slug = "{\"slug\":\"" + tournamentName + "\"}";

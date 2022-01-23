@@ -1,0 +1,22 @@
+create or replace TRIGGER GET_EVENT 
+AFTER DELETE OR INSERT OR UPDATE ON PLAYER
+DECLARE
+    Operation VARCHAR2(20);
+BEGIN
+
+    IF DELETING THEN
+        Operation := 'DELETE';
+    END IF;
+
+    IF INSERTING THEN
+        Operation := 'INSERT';
+    END IF;
+
+    IF UPDATING THEN
+        Operation := 'UPDATE';
+    END IF;
+
+
+    INSERT INTO EVENT_LOGS (event, db_user_name, event_date)
+    VALUES(Operation , USER, SYSDATE);
+END;

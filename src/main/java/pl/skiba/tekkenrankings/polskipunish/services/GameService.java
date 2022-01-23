@@ -40,11 +40,4 @@ public class GameService {
         return SimpleMapper.INSTANCE.GameListToDTO(gameRepo.findAll());
     }
 
-    @EventListener(ApplicationReadyEvent.class)
-    public void fillDB() {
-        List<Tournament> list = new ArrayList<>();
-        gameRepo.save(new Game("Tekken 7", list));
-        gameRepo.save(new Game("Soul Calibur 6", list));
-        gameRepo.save(new Game("Street Fighter 5", list));
-    }
 }

@@ -1,5 +1,8 @@
 package pl.skiba.tekkenrankings.polskipunish.controlers;
 
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,19 +35,19 @@ public class UploadCSVController {
     }
 
     @PostMapping("/upload-csv")
-    public String uploadCSVFile(@RequestParam("file") MultipartFile file,
+    public ResponseEntity<String> uploadCSVFile(@RequestParam("file") MultipartFile file,
                                 @RequestParam("name") String name,
                                 @RequestParam("gamename") String gamename,
                                 @RequestParam("tournamentType") TournamentCategoryEnum tournamentType,
                                 @RequestParam("country") String country,
-                                @RequestParam("eventDate") Date eventDate) {
+                                @RequestParam @DateTimeFormat(pattern="MM/dd/yyyy") Date eventDate) {
 
 
         List<TournamentFromCSV> tournamentPlayers = uploadCSVService.UploadPlayersToCSV(file);
         List<TournamentParticipant> participants = SimpleMapper.INSTANCE.ToTournamentParticipantsListFromCSV(tournamentPlayers);
         Tournament tournament = uploadCSVService.CreateTournamentFromCSV(name, gamename, tournamentType, participants, country, eventDate);
 
-        return "csv-file-upload";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

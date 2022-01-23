@@ -1,0 +1,8 @@
+create or replace TRIGGER BEFOREDELETE 
+AFTER DELETE ON PLAYER 
+
+FOR EACH ROW
+BEGIN
+    INSERT INTO PLAYER_BACKUP(id, name, offline_points, online_points)
+    VALUES(:old.id, :old.name, :old.offline_points, :old.online_points);
+END;
