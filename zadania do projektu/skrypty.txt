@@ -1,0 +1,7 @@
+select to_char(t.event_date, 'yyyy-mm') , count(t.tournament_name) as num_of_tournaments from tournament t group by to_char(t.event_date, 'yyyy-mm')
+
+select p.name as name, avg(tp.placement) as avg_placement, sum(tp.points) as points from tournament_participant tp 
+    join player p on p.id = tp.player_id GROUP BY p.name Order by points DESC
+
+select p.name as name, avg(tp.placement) as avg_placement, sum(tp.points) as points from tournament_participant tp 
+    join player p on p.id = tp.player_id where points > 0 GROUP BY p.name Order by points DESC
