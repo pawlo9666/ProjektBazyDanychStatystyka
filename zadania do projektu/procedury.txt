@@ -7,6 +7,47 @@ BEGIN
     VALUES(player_name);
 END ADD_PLAYER;
 
+create or replace PROCEDURE DELETE_PLAYER(player_id in player.id%TYPE)
+IS
+BEGIN
+    delete from tournament_participant where player_id=player_id;
+    delete from player where id = player_id;
+END DELETE_PLAYER;
+
+
+create or replace PROCEDURE UPDATE_PLAYER(player_id in player.id%TYPE, player_name in player.name%TYPE)
+IS
+BEGIN
+    CHECK_NICKNAME_LENGTH(player_name);
+    UPDATE player set name=player_name where id=player_id;
+END UPDATE_PLAYER;
+
+
+
+
+
+CREATE OR REPLACE PROCEDURE ADD_TOURNAMENT_PARTICIPANT(player_id in tournament_participant.player_id%TYPE , tournament_id in tournament_participant.tournament_id%TYPE ,placement in tournament_participant.placement%TYPE ,points in tournament_participant.points%TYPE)
+IS
+BEGIN
+    CHECK_POINTS_VALUE(points);
+    CHECK_IF_TOURNAMENT_EXISTS(tournament_id);
+  
+    INSERT INTO TOURNAMENT_PARTICIPANT(tournament_participant.player_id , tournament_participant.tournament_id , tournament_participant.placement , tournament_participant.points)
+    VALUES(player_id , tournament_id , placement, points);
+END ADD_TOURNAMENT_PARTICIPANT;
+
+
+
+
+
+
+
+
+
+
+
+
+
 create or replace PROCEDURE CHECK_NICKNAME_LENGTH(nickname in player.name%TYPE) IS
 BEGIN
   IF LENGTH(nickname) >= 30 then
@@ -27,3 +68,62 @@ BEGIN
     CHECK_NICKNAME_LENGTH(player_name);
     UPDATE player set name=player_name where id=player_id;
 END UPDATE_PLAYER;
+
+
+
+
+
+
+
+
+
+
+
+CREATE OR REPLACE PROCEDURE CHECK_IF_PLAYER_EXISTS(player_id in PLAYER.id%TYPE) 
+AS
+ TEMP_PLAYER_ID PLAYER.id%TYPE;
+BEGIN
+ SELECT id INTO TEMP_PLAYER_ID FROM player where player.id = player_id;
+
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        raise_application_error(-20000, 'PLAYER does not exists');
+ 
+END CHECK_IF_PLAYER_EXISTS;
+
+
+
+
+CREATE OR REPLACE PROCEDURE CHECK_POINTS_VALUE(points in TOURNAMENT_PARTICIPANT.points%TYPE)
+AS
+    TO_MANY_POINTS EXCEPTION;
+BEGIN
+  IF (POINTS > 200) THEN RAISE TO_MANY_POINTS;
+  END IF;
+EXCEPTION
+  WHEN TO_MANY_POINTS THEN
+         raise_application_error(-20000, 'Points value is too big');
+ 
+END CHECK_POINTS_VALUE;
+
+
+CREATE OR REPLACE PROCEDURE CHECK_IF_TOURNAMENT_EXISTS(tournament_id in TOURNAMENT.id%TYPE) 
+AS
+ TEMP_TOURNAMENT_ID TOURNAMENT.id%TYPE;
+BEGIN
+ SELECT id INTO TEMP_TOURNAMENT_ID FROM tournament where tournament.id = tournament_id;
+
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        raise_application_error(-20000, 'Tournament does not exists');
+ 
+END CHECK_IF_TOURNAMENT_EXISTS;
+
+
+
+create or replace PROCEDURE CREATE_DATA_FOR_REPORT
+AS q SYS_REFCURSOR;
+BEGIN
+    OPEN q FOR select p.name as name, avg(tp.placement) as avg_placement, sum(tp.points) as points from tournament_participant tp 
+    join player p on p.id = tp.player_id GROUP BY p.name Order by points DESC;
+END;
