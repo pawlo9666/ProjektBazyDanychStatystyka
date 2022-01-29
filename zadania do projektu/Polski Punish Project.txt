@@ -1,0 +1,9 @@
+Pobieranie danych
+
+http://localhost:8081/api/admin/csv
+http://localhost:8081/api/admin/smash
+https://smash.gg/tournament/vigilant-fight-club-vol-3-one-must-fall/events
+http://localhost:8081/api/admin/challonge
+https://challonge.com/pl/epochgtv17
+
+zbiory częste. zanotować.
